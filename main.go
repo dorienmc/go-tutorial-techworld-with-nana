@@ -19,7 +19,7 @@ func main(){
 	fmt.Printf("We have a total of %v tickets and %v are still available.\n", conferenceTickets, remainingTickets)
 	fmt.Println("Get your tickets here to attend")
 
-	for {
+	for remainingTickets > 0 {
 		var firstName string
 		var lastName string
 		var email string
@@ -37,19 +37,32 @@ func main(){
 		fmt.Print("Enter number of tickets: ")
 		fmt.Scan(&userTickets)
 		
-		remainingTickets -= userTickets
-		// array: bookings[0] = firstName + " " + lastName
-		bookings = append(bookings, firstName + " " + lastName)
-		
-		fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v.\n", firstName, lastName, userTickets, email)
-		fmt.Printf("There are %v tickets lef for %v.\n", remainingTickets, conferenceName)
-		
-		firstNames := []string{}
-		for _, booking := range bookings {
-			var names = strings.Fields(booking)
-			firstNames = append(firstNames, names[0])
+		if userTickets <= remainingTickets {
+			remainingTickets -= userTickets
+			// array: bookings[0] = firstName + " " + lastName
+			bookings = append(bookings, firstName + " " + lastName)
+			
+			fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v.\n", firstName, lastName, userTickets, email)
+			fmt.Printf("There are %v tickets lef for %v.\n", remainingTickets, conferenceName)
+			
+			firstNames := []string{}
+			for _, booking := range bookings {
+				var names = strings.Fields(booking)
+				firstNames = append(firstNames, names[0])
+			}
+			
+			fmt.Printf("The first names of bookings are: %v\n", firstNames)
+			
+			// //noTicketsRemaining := remainingTickets == 0
+			// if remainingTickets == 0 {
+			// 	// quit
+			// 	fmt.Println("Our conference is booked out. Come back next year.")
+			// 	break
+			// }
+		} else {
+			fmt.Printf("There are only %v remaining, so you can't book %v tickets.\n", remainingTickets, userTickets)
 		}
-		
-		fmt.Printf("The first names of bookings are: %v\n", firstNames)
 	}
+	
+	fmt.Println("Our conference is booked out. Come back next year.")
 }
