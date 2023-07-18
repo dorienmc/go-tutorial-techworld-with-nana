@@ -8,4 +8,4 @@
 - Init project `go mod init booking-app`
 
 ## Execute app
-- Run `go run main.go`
+- Run `go run <filename>.go`
