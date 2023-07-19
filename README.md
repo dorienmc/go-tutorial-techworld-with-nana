@@ -9,3 +9,5 @@
 
 ## Execute app
 - Run `go run <filename>.go`
+- Run with multiple files `go run <filename1>.go <filename2>.go`
+- Run all files in folder `go run .`
