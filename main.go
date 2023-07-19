@@ -2,7 +2,12 @@ package main
 
 import (
 	"fmt"
+	"sync"
+	"time"
 )
+
+// Waitgroup waits for the launched goroutine to finish
+var wg = sync.WaitGroup{}
 
 // Package level variables
 // Defined at the top outside all functions
@@ -24,12 +29,16 @@ type UserData struct {
 func main(){		
 	greetUsers()
 
-	for remainingTickets > 0 {
+	for remainingTickets >= 0 {
 		firstName, lastName, email, userTickets := getUserInput()
 		isValidName, isValidEmail, isValidTicketNumber := validateUserInput(firstName, lastName, email, userTickets)
 		
 		if isValidName && isValidEmail && isValidTicketNumber {
 			bookTicket(remainingTickets, userTickets, firstName, lastName, email)
+			
+			wg.Add(1)
+			go sendTicket(userTickets, firstName, lastName, email)
+			
 			
 			firstNames := getFirstNames()
 			fmt.Printf("The first names of bookings are: %v\n", firstNames)
@@ -49,6 +58,7 @@ func main(){
 	}
 	
 	fmt.Println("Our conference is booked out. Come back next year.")
+	wg.Wait()
 }
 
 func greetUsers() {
@@ -102,4 +112,14 @@ func bookTicket(remainingTickets uint, userTickets uint, firstName string, lastN
 	
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v.\n", firstName, lastName, userTickets, email)
 	fmt.Printf("There are %v tickets lef for %v.\n", remainingTickets, conferenceName)
+}
+
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	time.Sleep(10 * time.Second)
+	
+	var ticket = fmt.Sprintf("%v tickets for %v %v", userTickets, firstName, lastName)
+	fmt.Println("################")
+	fmt.Printf("Sending ticket:\n %v \nto email address %v\n", ticket, email)
+	fmt.Println("################")
+	wg.Done()
 }
